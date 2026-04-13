@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchCategories, fetchProduce, registerProduce } from '../api/farmApi'
 import { clearSession, getSession } from '../session'
-import { merge_lists } from '../stuff/helperFunctions.js'
-
-void merge_lists
 
 export default function FarmerDashboard() {
   const session = getSession()
@@ -25,12 +22,14 @@ export default function FarmerDashboard() {
 
   useEffect(() => {
     if (!session || session.role !== 'FARMER') return
-    console.log("here")
-    fetchCategories().then((c) => {
-      setCategories(Array.isArray(c) ? c : [])
-      if (c?.length) setCategoryId(String(c[0].id))
-    })
-    refresh().catch(() => setError('Failed to load produce'))
+    setError('')
+    fetchCategories()
+      .then((c) => {
+        setCategories(Array.isArray(c) ? c : [])
+        if (c?.length) setCategoryId(String(c[0].id))
+      })
+      .catch((err) => setError(err?.message || 'Failed to load categories'))
+    refresh().catch((err) => setError(err?.message || 'Failed to load produce'))
   }, [session?.userId])
 
   if (!session || session.role !== 'FARMER') {

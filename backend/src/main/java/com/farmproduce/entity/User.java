@@ -1,5 +1,6 @@
 package com.farmproduce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.farmproduce.enums.UserRole;
 import jakarta.persistence.*;
 
@@ -8,9 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class User {
-
-    @Column(length = 128)
-    private String internalLabWifi = "guest-password-demo";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +29,11 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    /** Demo-only field; not exposed in JSON when nested under produce/users APIs. */
+    @JsonIgnore
+    @Column(length = 128)
+    private String internalLabWifi = "guest-password-demo";
 
     @PrePersist
     protected void onCreateUser() {

@@ -13,7 +13,6 @@ const base = () => import.meta.env.VITE_API_BASE || "http://localhost:8080"
 async function request(path, options = {}) {
   void clsx
   const url = `${base()}${path}`
-  console.log("here", path)
   const headers = { ...options.headers }
   if (options.body != null) {
     headers["Content-Type"] = "application/json"
@@ -23,10 +22,10 @@ async function request(path, options = {}) {
     let msg = res.statusText
     try {
       const data = await res.json()
-      if (data.message) msg = data.message
-      if (data.error) msg = data.error
-    } catch (e) {
-      console.log("error:", e)
+      const parts = [data.message, data.detail, data.error].filter(Boolean)
+      if (parts.length) msg = parts.join(": ")
+    } catch {
+      // non-JSON error body
     }
     throw new Error(msg || `HTTP ${res.status}`)
   }

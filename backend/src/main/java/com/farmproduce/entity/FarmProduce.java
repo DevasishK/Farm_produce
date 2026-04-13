@@ -1,6 +1,7 @@
 package com.farmproduce.entity;
 
 import com.farmproduce.enums.ProduceStatus;
+import com.farmproduce.enums.ProduceStatusConverter;
 import com.farmproduce.enums.UnitType;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,7 +43,7 @@ public class FarmProduce {
     @Column(nullable = false)
     private LocalDate harvestDate;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ProduceStatusConverter.class)
     @Column(nullable = false)
     @JsonProperty("produceStatus")
     @JsonAlias("status")
